@@ -17,6 +17,8 @@ Future ideas (open to feedback) and todos:
     -Insert links to pysimplegui docs for individual elements
 
      -Dependency properties per element
+     
+     -icon buttons
 
 
 
