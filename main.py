@@ -3,7 +3,7 @@ import sys
 import time
 from os import path, startfile
 import pyperclip
-import button_functions as util
+from button_functions import Elements
 
 
 import PySimpleGUI as sg
@@ -13,13 +13,15 @@ GUI_CLASSES = dict(
     inspect.getmembers(sys.modules["PySimpleGUI"], inspect.isclass))
 
 ELEMB_KEY = "ELEMB-"
-
-
+    
 # Function that returns the layout of the middle Elements Frame, where you choose the an element
 # It's lists made by hand, but any Element that is not in any list will be added at the last list (Others)
+
+
 def make_elements_frame():
     layout = []
-
+    El = Elements()
+    
     elements = set(GUI_CLASSES.values())
     elements_names = [
         e.__name__ for e in elements
@@ -30,11 +32,10 @@ def make_elements_frame():
     make_button_row = (
         lambda element_list:
         [sg.Button(button_text=e, key=ELEMB_KEY + e, auto_size_button=True) for e in element_list])
+    
 
     layout.append([
-        sg.Button(button_text="Delete Element",
-                  button_color=("black", "darkred"),
-                  key="DeleteElement"),
+        sg.Button(button_text="Delete Element", button_color=("black", "darkred"), key="DeleteElement"),
         sg.Button('~Theme~', key="Theme")
     ])
     layout.append([
@@ -52,7 +53,9 @@ def make_elements_frame():
     layout.append(make_button_row(main_elements))
     layout.append(make_button_row(main_eltwo))
 
-    layout.append([sg.Text(text="Containers")])
+    layout.append([
+            sg.Text(text="Containers")
+            ])
     container_elems = ["TabGroup", "Tab", "Frame", "Column"]
     layout.append(make_button_row(container_elems))
 
@@ -74,13 +77,17 @@ def make_elements_frame():
 
     layout.append([sg.Text(text="Others")])
     other_elements = [
-        "Slider", "Spin", "Multiline", "ProgressBar", "StatusBar"
+        "Slider", "Spin", "Multiline"
     ]
     layout.append(make_button_row(other_elements))
+    other_element = [
+        "ProgressBar", "StatusBar"
+    ]
+    layout.append(make_button_row(other_element))
     for e in elements_names:
         if e not in (main_elements + main_eltwo + container_elems + design_elems +
                      organization_elems + structured_info_elems +
-                     drawing_elems + other_elements + ["Pane"]):
+                     drawing_elems + other_elements + other_element + ["Pane"]):
             other_elements.append(e)
     # print(e)
 
@@ -118,11 +125,8 @@ def make_main_window(tree):
 
     stuff_row = [tree_elem, frame_elem, frame_prop]
     menu_def = [
-                ['&File', ['&Open     Ctrl-O', '&Save       Ctrl-S', '&Properties', 'E&xit']],
-                ['&Edit', ['&Paste', ['Special', 'Normal', ], 'Undo', 'Options::this_is_a_menu_key'], ],
-                ['&Toolbar', ['---', 'Command &1', 'Command &2',
-                              '---', 'Command &3', 'Command &4']],
-                ['&Help', ['&About...']]
+                ['&File', ['Import', 'Save', 'Load', 'RESET', 'Setup', 'Export']],
+                ['&Help', ['About']]
                 ]
 
     layout = [[
@@ -132,12 +136,7 @@ def make_main_window(tree):
         [sg.Menu(menu_def, tearoff=True, font='_ 12', key='-MENUBAR-')],
 
         sg.Button("About"),
-        sg.Button('Preview'),
-        sg.Button('Import'),
-        sg.Button('~Export~', ),
-        sg.Button("Save"),
-        sg.Button("Load"),
-        sg.Button("Setup"),
+        sg.Button('~Export~', key='Export'),
         sg.Button('Apply'),
         sg.Button('RESET'),
         sg.Text(size=(20, 1),
@@ -148,7 +147,7 @@ def make_main_window(tree):
 
     # STEP 2 - create the window
     # print(location, size)
-    w = sg.Window('My new window', layout, finalize=True, resizable=False, size=(1200, 600))
+    w = sg.Window('My new window', layout, finalize=True, resizable=False, size=(1200, 700))
 
     # Resizes the Main 3 elements according to the window size
     size = tuple(w.Size)
