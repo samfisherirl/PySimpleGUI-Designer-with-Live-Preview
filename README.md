@@ -31,7 +31,7 @@ Exec made with pyinstaller
 
 ## About
 
-![image](https://user-images.githubusercontent.com/98753696/225898799-5fc61830-2bc3-43dd-9a8c-516a94aa38b4.png)
+ ![image](https://user-images.githubusercontent.com/98753696/225901045-a57a8efb-378a-47ad-a296-36bfd5029e83.png)
 
 
 I don't really like frontend but I really like the idea of giving my backend/terminal programs something more pleasurable to interact with.
