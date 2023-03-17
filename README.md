@@ -9,8 +9,11 @@ With this, Im looking to provid themes, and small tweaks to improve consistance,
 -Full theme list applied to both the GUIDesigner and the export
 
 Future ideas (open to feedback) and todos:
+
 -EXE release
+
 -Insert links to pysimplegui docs for individual elements
+
 -Dependency properties per element
 
 
