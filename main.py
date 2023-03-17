@@ -29,7 +29,7 @@ def make_elements_frame():
     # Makes a button for each string in the given list of strings
     make_button_row = (
         lambda element_list:
-        [sg.Button(button_text=e, key=ELEMB_KEY + e) for e in element_list])
+        [sg.Button(button_text=e, key=ELEMB_KEY + e, auto_size_button=True) for e in element_list])
 
     layout.append([
         sg.Button(button_text="Delete Element",
@@ -42,12 +42,15 @@ def make_elements_frame():
         sg.Button('Move Element Down ˅', key="MoveDown")
     ])
 
+    main_eltwo = [
+    "Combo", "Listbox", "Radio", "Checkbox"
+    ]
     layout.append([sg.Text(text="Main Elements")])
     main_elements = [
-        "Text", "InputText", "Output", "Button", "Combo", "Listbox", "Radio",
-        "Checkbox"
+        "Text", "InputText", "Output", "Button"
     ]
     layout.append(make_button_row(main_elements))
+    layout.append(make_button_row(main_eltwo))
 
     layout.append([sg.Text(text="Containers")])
     container_elems = ["TabGroup", "Tab", "Frame", "Column"]
@@ -73,13 +76,13 @@ def make_elements_frame():
     other_elements = [
         "Slider", "Spin", "Multiline", "ProgressBar", "StatusBar"
     ]
+    layout.append(make_button_row(other_elements))
     for e in elements_names:
-        if e not in (main_elements + container_elems + design_elems +
+        if e not in (main_elements + main_eltwo + container_elems + design_elems +
                      organization_elems + structured_info_elems +
                      drawing_elems + other_elements + ["Pane"]):
             other_elements.append(e)
     # print(e)
-    layout.append(make_button_row(other_elements))
 
     return layout
 
@@ -114,11 +117,20 @@ def make_main_window(tree):
     frame_prop = sg.Frame("Properties", [])
 
     stuff_row = [tree_elem, frame_elem, frame_prop]
+    menu_def = [
+                ['&File', ['&Open     Ctrl-O', '&Save       Ctrl-S', '&Properties', 'E&xit']],
+                ['&Edit', ['&Paste', ['Special', 'Normal', ], 'Undo', 'Options::this_is_a_menu_key'], ],
+                ['&Toolbar', ['---', 'Command &1', 'Command &2',
+                              '---', 'Command &3', 'Command &4']],
+                ['&Help', ['&About...']]
+                ]
 
     layout = [[
         sg.Text(
             'M.M. - Welcome to a layout builder for PySimpleGUI, made with PySimpleGUI!'
-        ),
+        ),        
+        [sg.Menu(menu_def, tearoff=True, font='_ 12', key='-MENUBAR-')],
+
         sg.Button("About"),
         sg.Button('Preview'),
         sg.Button('Import'),
@@ -214,7 +226,10 @@ def main():
         """ If user clicked button on an element in the tree"""
 
         if event == "RESET":
-            util.RESET()
+            try:
+                util.RESET()
+            except:
+                print()
             try:
                 tree = TreeNode.parse_string_layout(text)
                 tree_element.update(values=tree.get_tree_data())
