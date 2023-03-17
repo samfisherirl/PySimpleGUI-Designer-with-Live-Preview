@@ -20,7 +20,7 @@ Future ideas (open to feedback) and todos:
      
      -icon buttons 
      
-![image](https://user-images.githubusercontent.com/98753696/225966148-0f718bdd-9ea6-4121-9c6f-cb4a3323e579.png)
+ ![image](https://user-images.githubusercontent.com/98753696/225966183-3ffdd87b-4172-4094-b70b-acaf83cd3116.png)
 
 
 > A GUI for designing Python GUI's for PySimpleGUI.
