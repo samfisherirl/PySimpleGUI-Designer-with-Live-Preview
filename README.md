@@ -4,19 +4,19 @@ This is a fork from the original here: https://github.com/PriestTheBeast/SimpleG
 
 With this, Im looking to provid themes, and small tweaks to improve consistance, ease of use, and QOL. 
 
--Exports now include full code
+    -Exports now include full code
 
--Reset button to restore default code when you need a north star
+    -Reset button to restore default code when you need a north star
 
--Full theme list applied to both the GUIDesigner and the export
+    -Full theme list applied to both the GUIDesigner and the export
 
 Future ideas (open to feedback) and todos:
 
-  -EXE release
+    -EXE release
 
-  -Insert links to pysimplegui docs for individual elements
-  
-   -Dependency properties per element
+    -Insert links to pysimplegui docs for individual elements
+
+     -Dependency properties per element
 
 
 
