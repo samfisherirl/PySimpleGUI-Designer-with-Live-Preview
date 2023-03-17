@@ -1,4 +1,4 @@
-# SimpleGUIBuilder
+# SimpleGUIDesigner with Themes
 
 This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
