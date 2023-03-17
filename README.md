@@ -12,7 +12,7 @@ Future ideas (open to feedback) and todos:
 
   -EXE release
   -Insert links to pysimplegui docs for individual elements
-  -Dependency properties per element
+   -Dependency properties per element
 
 
 
