@@ -19,6 +19,7 @@ Future ideas (open to feedback) and todos:
      -Dependency properties per element
      
      -icon buttons
+![image](https://user-images.githubusercontent.com/98753696/225956510-20cfe838-5fbe-470d-a21d-d6080e084b2a.png)
 
 
 
