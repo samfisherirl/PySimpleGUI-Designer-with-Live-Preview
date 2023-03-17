@@ -1,0 +1,1 @@
+[[sg.Text(text="This is a very basic PySimpleGUI layout")], [sg.Input()], [sg.Button(button_text="Button", key="-ExampleKey-"), sg.Button(button_text="Exit")]]
