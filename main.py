@@ -3,7 +3,7 @@ import sys
 import time
 from os import path, startfile
 import pyperclip
- 
+import button_functions as util
 
 
 import PySimpleGUI as sg
@@ -35,9 +35,11 @@ def make_elements_frame():
         sg.Button(button_text="Delete Element",
                   button_color=("black", "darkred"),
                   key="DeleteElement"),
-        sg.Button('Move Element Up ˄', key="MoveUp"),
-        sg.Button('Move Element Down ˅', key="MoveDown"),
         sg.Button('~Theme~', key="Theme")
+    ])
+    layout.append([
+        sg.Button('Move Element Up ˄', key="MoveUp"),
+        sg.Button('Move Element Down ˅', key="MoveDown")
     ])
 
     layout.append([sg.Text(text="Main Elements")])
@@ -81,17 +83,18 @@ def make_elements_frame():
 
     return layout
 
+
 def export_maker(theme, tree):
 	
 	return f"""import PySimpleGUI as sg
-		sg.theme('{theme}')
-		{tree}
-		window = sg.Window('Template Window', layout, resizable=True)
-		while True:
-			event, values = window.read()   # Read the event that happened and the values dictionary
-			print(event, values)
-			if event == sg.WIN_CLOSED or event == 'Exit':     # If user closed window with X or if user clicked "Exit" button then exit
-				break"""
+sg.theme('{theme}')
+layout = {tree}
+window = sg.Window('Template Window', layout, resizable=True)
+while True:
+    event, values = window.read()   # Read the event that happened and the values dictionary
+    print(event, values)
+    if event == sg.WIN_CLOSED or event == 'Exit':     # If user closed window with X or if user clicked "Exit" button then exit
+        break"""
 # Creates the main window layout from scratch. Necessary to reset the window.
 def make_main_window(tree):
 
@@ -100,11 +103,13 @@ def make_main_window(tree):
                         key="-TREE-",
                         enable_events=True,
                         show_expanded=True,
-                        col0_width=30,
+                        col0_width=20,
                         auto_size_columns=False,
-                        col_widths=[5, 10])
+                        col_widths=[5, 10],
+                        
+                        )
 
-    frame_elem = sg.Frame("Elements", make_elements_frame())
+    frame_elem = sg.Frame("Elements", tuple(make_elements_frame()))
 
     frame_prop = sg.Frame("Properties", [])
 
@@ -117,7 +122,7 @@ def make_main_window(tree):
         sg.Button("About"),
         sg.Button('Preview'),
         sg.Button('Import'),
-        sg.Button('Export'),
+        sg.Button('~Export~', ),
         sg.Button("Save"),
         sg.Button("Load"),
         sg.Button("Setup"),
@@ -131,8 +136,7 @@ def make_main_window(tree):
 
     # STEP 2 - create the window
     # print(location, size)
-    w = sg.Window('My new window', layout, finalize=True, resizable=True)
-    w.maximize()
+    w = sg.Window('My new window', layout, finalize=True, resizable=False, size=(1200, 600))
 
     # Resizes the Main 3 elements according to the window size
     size = tuple(w.Size)
@@ -144,36 +148,21 @@ def make_main_window(tree):
     return w, tree_elem, frame_elem, frame_prop, (elem_w, elem_h)
 
 
+##########################################
 # Main Function :)
+#########################################
+
+
 def main():
     print("Hello World!")
-    try:
-        with open('theme.txt', 'r') as f:
-            theme = f.read()
-    except:
-        theme = "DarkGrey4"
-    sg.theme(theme)  # No gray windows please!
-
-    # auto_load from file if it exists
-    try:
-        f = open("autosave.txt")
-        template_string_layout = f.read()
-        f.close()
-    except:
-        print("There is no autosave file. Giving template layout.")
-        template_string_layout = "import PySimpleGUI as sg\n" \
-              "sg.theme('DarkGrey4')\n" \
-              "[" \
-              "[sg.Text(text='This is a very basic PySimpleGUI layout')], " \
-              "[sg.InputText()], " \
-              "[sg.Button('Button', key='-ExampleKey-'), sg.Button(button_text='Exit')] " \
-              "]"
-
+    sg.theme(util.get_theme())  # No gray windows please!
+    
+    template_string_layout = util.template_reader()
     # Create tree structure from the string layout
     # This tree structure is different from the TreeElement,
     # 	the TreeElement shows a simplified visual representation of this Tree
     tree = TreeNode.parse_string_layout(template_string_layout)
-
+    
     # Create window
     window, tree_element, frame_elements, frame_properties, elem_size = make_main_window(
         tree)
@@ -201,7 +190,8 @@ def main():
         if event is None:
             continue
 
-        # If user clicked button on an element in the tree
+        
+        """ If user clicked button on an element in the tree# If user clicked button on an element in the tree"""
         if event == "-TREE-":
             tree_node = values[event][0]
             if tree_node != current_tree_node:
@@ -218,25 +208,18 @@ def main():
                 current_property = tree_node.get_properties_layout(
                     elem_size, property_count + 1)
                 window.extend_layout(frame_properties,
-                                     [[sg.pin(current_property)]])
+                                    [[sg.pin(current_property)]])
                 property_count += 1
 
-        # If user clicked button on an element in the tree
+        """ If user clicked button on an element in the tree"""
 
         if event == "RESET":
-            with open("autosave.txt", "w") as f:
-                with open("default.txt", "r") as g:
-                    text = g.read()
-                    f.write(str(text))
+            util.RESET()
             try:
                 tree = TreeNode.parse_string_layout(text)
                 tree_element.update(values=tree.get_tree_data())
             except Exception as e:
-                sg.popup_error(
-                    ("Error: " + str(e) if len(e.args) == 1 else "Error: " +
-                     str(e.args[0]) + "\n, in this place: " + str(e.args[1])) +
-                    "\n Importing cancelled or Error in importing (mistake in the text given)."
-                )
+                util.reset_error(sg, e)
 
         if event == "Apply":
             selected_tree_element = values["-TREE-"]
@@ -279,7 +262,7 @@ def main():
                 sg.popup("No element selected")
             else:
                 response = sg.popup_ok_cancel("Confirm deletion?",
-                                              selected_tree_element[0])
+                                            selected_tree_element[0])
                 if response == "OK":
                     selected_tree_element[0].remove_tree_node()
                     tree_element.update(values=tree.get_tree_data())
@@ -310,8 +293,8 @@ def main():
                 sg.Cancel()
             ]]).read(close=True)
             if ev == 'OK':
-                window.close()
                 theme = vals['-THEME LIST-']
+                window.close()
                 sg.user_settings_set_entry('theme', theme)
                 with open("theme.txt", "w") as f:
                     f.write(theme)
@@ -338,15 +321,15 @@ def main():
                         "Error: " + str(e) if len(e.args) == 1 else "Error: " +
                         str(e.args[0]) + "\n, in this place: " + str(e.args[1])
                     ) + "\n Importing cancelled or Error in importing (mistake in the text given)."
-                                   )
+                                )
 
         # If user clicked on the Export button
         # Shows the correspondent string layout for the GUI being built
         if event == "Export":
-            textout = export_maker(theme, tree.layout_to_string())
+            textout = export_maker(util.get_theme(), tree.layout_to_string())
             pyperclip.copy(textout)
             ev, vals = sg.Window('Click okay to copy', [[
-                sg.Multiline(textout, size=(20,10), key='-FILESLB-'),
+                sg.Multiline(default_text=textout, size=(20,10), key='-FILESLB-'),
                 sg.OK(),
                 sg.Cancel()
             ]]).read(close=True)
@@ -362,7 +345,7 @@ def main():
                         f.write(tree.layout_to_string())
             except Exception as e:
                 sg.popup_error("Error: " + str(e) +
-                               "\nError in writing to file.")
+                            "\nError in writing to file.")
 
         # If user clicked on the Load button
         # Import button but string layout comes from file
@@ -388,14 +371,14 @@ def main():
                         except Exception as e:
                             sg.popup_error(
                                 ("Error: " +
-                                 str(e) if len(e.args) == 1 else "Error: " +
-                                 str(e.args[0]) + "\n, in this place: " +
-                                 str(e.args[1])) +
+                                str(e) if len(e.args) == 1 else "Error: " +
+                                str(e.args[0]) + "\n, in this place: " +
+                                str(e.args[1])) +
                                 "\n Loading cancelled or Error in Loading (mistake in the text given)."
                             )
             except Exception as e:
                 sg.popup_error("Error: " + str(e) +
-                               "\nError in reading from file.")
+                            "\nError in reading from file.")
 
         # If user clicked on the Setup button
         # This button will create a file from the template in here
@@ -411,7 +394,7 @@ def main():
                         tree.write_to_file(f)
             except Exception as e:
                 sg.popup_error("Error: " + str(e) +
-                               "\nError in writing to file.")
+                            "\nError in writing to file.")
 
         # If user clicked on the About button
         # This button will show info I want to show for people to see if anyone wants to see xD
@@ -441,9 +424,9 @@ def main():
         if not win2_active and event == "Preview":
             try:
                 win2 = sg.Window('Preview',
-                                 tree.get_layout(),
-                                 finalize=True,
-                                 modal=True)
+                                tree.get_layout(),
+                                finalize=True,
+                                modal=True)
                 win2_active = True
             except Exception as e:
                 sg.popup_error(
@@ -459,7 +442,7 @@ def main():
                 current_time = time.time()
             except Exception as e:
                 sg.popup_error("Error: " + str(e) +
-                               "\nError in autosaving to file")
+                            "\nError in autosaving to file")
 
     window.close()
     # autosave
