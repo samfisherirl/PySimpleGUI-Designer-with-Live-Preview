@@ -38,7 +38,6 @@ Future ideas (open to feedback) and todos:
     
     - Live preview
      
- ![image](https://user-images.githubusercontent.com/98753696/225966183-3ffdd87b-4172-4094-b70b-acaf83cd3116.png)
 
 
 > A GUI for designing Python GUI's for PySimpleGUI.
