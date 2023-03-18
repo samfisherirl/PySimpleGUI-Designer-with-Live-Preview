@@ -9,7 +9,8 @@ As a lifelong learner, I am always seeking out new and innovative approaches to 
 
 If I may, I would like to take this opportunity to request any recommendations for libraries or tools that you utilize for GUI design. Personally, I have found pywebview and Eel to be highly effective, primarily due to the expansive HTML design tools universe that they offer. 
 
-https://preview.redd.it/cblg6f0j0koa1.gif?format=mp4&v=enabled&s=930f585e307915358fa6069de8b8018f2affcabb
+ ![image](https://user-images.githubusercontent.com/98753696/226136055-aa557d0b-31c2-4e8e-b9c5-82ee4e6c7cc5.png)
+
 
 This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
