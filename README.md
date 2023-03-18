@@ -1,8 +1,8 @@
 # SimpleGUIDesigner with Live Preview
 
 Live preview is the main feature Im looking to integrate and provide. Its not fully flushed out, releases without live updates are available. 
-blob:https://www.reddit.com/797ad799-96e4-474c-9300-29e8191b3396
 #
+https://preview.redd.it/cblg6f0j0koa1.gif?format=mp4&v=enabled&s=930f585e307915358fa6069de8b8018f2affcabb
 
 This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
