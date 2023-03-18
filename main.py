@@ -3,7 +3,7 @@ import sys
 import time
 from os import path, startfile
 import pyperclip
-from button_functions import Elements
+import button_functions as util
 
 
 import PySimpleGUI as sg
@@ -20,7 +20,6 @@ ELEMB_KEY = "ELEMB-"
 
 def make_elements_frame():
     layout = []
-    El = Elements()
     
     elements = set(GUI_CLASSES.values())
     elements_names = [
@@ -31,7 +30,11 @@ def make_elements_frame():
     # Makes a button for each string in the given list of strings
     make_button_row = (
         lambda element_list:
-        [sg.Button(button_text=e, key=ELEMB_KEY + e, auto_size_button=True) for e in element_list])
+        [sg.Button(button_text=e, key=ELEMB_KEY + e, auto_size_button=True, mouseover_colors="black") for e in element_list])
+    
+    make_button_color = (
+        lambda element_list:
+        [sg.Button(button_text=e, key=ELEMB_KEY + e, auto_size_button=True, button_color="black", mouseover_colors="black") for e in element_list])
     
 
     layout.append([
@@ -50,8 +53,8 @@ def make_elements_frame():
     main_elements = [
         "Text", "InputText", "Output", "Button"
     ]
-    layout.append(make_button_row(main_elements))
-    layout.append(make_button_row(main_eltwo))
+    layout.append(make_button_color(main_elements))
+    layout.append(make_button_color(main_eltwo))
 
     layout.append([
             sg.Text(text="Containers")
@@ -135,7 +138,7 @@ def make_main_window(tree):
         ),        
         [sg.Menu(menu_def, tearoff=True, font='_ 12', key='-MENUBAR-')],
 
-        sg.Button("About"),
+        sg.Button("Preview"),
         sg.Button('~Export~', key='Export'),
         sg.Button('Apply'),
         sg.Button('RESET'),
@@ -147,7 +150,7 @@ def make_main_window(tree):
 
     # STEP 2 - create the window
     # print(location, size)
-    w = sg.Window('My new window', layout, finalize=True, resizable=False, size=(1200, 700))
+    w = sg.Window('PySimpleGUI-Designer', layout, finalize=True, resizable=False, size=(1200, 700))
 
     # Resizes the Main 3 elements according to the window size
     size = tuple(w.Size)
@@ -226,7 +229,7 @@ def main():
 
         if event == "RESET":
             try:
-                util.RESET()
+                text = util.RESET()
             except:
                 print()
             try:
@@ -260,6 +263,9 @@ def main():
 
         # If user clicked on an element to add
         if event[:6] == ELEMB_KEY:
+            if win2_active == True:
+                win2_active = False
+                win2.close()
             element_name = event[6:]
             selected_tree_element = values["-TREE-"]
             if not selected_tree_element:
@@ -268,6 +274,19 @@ def main():
                 selected_tree_element[0].add_tree_node(
                     TreeNode(GUI_CLASSES[element_name]))
                 tree_element.update(values=tree.get_tree_data())
+
+            """here I try to instant update preview 
+            try:
+                win2 = sg.Window('Preview',
+                        tree.get_layout(),
+                        finalize=True,
+                        modal=False)
+                win2_active = True
+            except Exception as e:
+                sg.popup_error(
+            "Error: " + str(e) +
+            "\nError in preview (mistake in the layout). You can try finding it with export"
+        )"""
 
         # If user clicked on the DeleteElement button
         if event == "DeleteElement":
@@ -343,8 +362,8 @@ def main():
             textout = export_maker(util.get_theme(), tree.layout_to_string())
             pyperclip.copy(textout)
             ev, vals = sg.Window('Click okay to copy', [[
-                sg.Multiline(default_text=textout, size=(20,10), key='-FILESLB-'),
-                sg.OK(),
+                sg.Multiline(default_text=textout, size=(20,10), key='-FILESLB-')], [
+                sg.OK(button_text="Copy"),
                 sg.Cancel()
             ]]).read(close=True)
 
@@ -440,7 +459,7 @@ def main():
                 win2 = sg.Window('Preview',
                                 tree.get_layout(),
                                 finalize=True,
-                                modal=True)
+                                modal=False)
                 win2_active = True
             except Exception as e:
                 sg.popup_error(

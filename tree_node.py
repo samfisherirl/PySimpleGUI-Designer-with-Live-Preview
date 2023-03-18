@@ -56,6 +56,7 @@ class TreeNode:
     def add_tree_node(self, tree_node):
         # how does this work with container elements - it has logic outside it
         # and if someone wants to add something and self is not a container then nothing happens
+        
         if self.is_container():
             if self.element == "Row" or tree_node.element == "Row":
                 self.container.append(tree_node)
