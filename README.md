@@ -4,9 +4,13 @@ Live preview is the main feature Im looking to integrate and provide. Its not fu
 #
 This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
-Throughout my experience with software development, I have found Autohotkey to be a remarkably user-friendly and accessible tool, serving as a beacon of excellence for mid to low-level use cases. Conversely, as a newcomer to the language, I have found the Qt framework to be somewhat challenging to approach. While not insurmountable, the learning curve can prove daunting. It is for this reason that I have taken an interest in the PySimpleGUI model, as it enables a streamlined transition from visual design to code implementation.
+As a software developer, I've always been passionate about creating tools and frameworks that make programming more accessible and user-friendly. Lately, I've been working on designing a GUI development framework for Python that is easy to use and can help new learners and coders.
 
-As a lifelong learner, I am always seeking out new and innovative approaches to mastering software development. With this in mind, I would be delighted to share my insights with others and contribute to the broader community. Although my current project is in its nascent stages, I am thrilled to witness its evolution and growth.
+My framework is built on the PySimpleGUI model, which allows for a seamless transition from visual design to code implementation. I believe this approach can greatly benefit new learners, as it reduces the learning curve and provides a more intuitive way to develop GUI applications.
+
+Moreover, my framework emphasizes simplicity and ease-of-use, so users can focus on designing and creating their applications rather than getting bogged down by technical details. As a result, my framework can help users of all skill levels to develop high-quality GUI applications quickly and efficiently.
+
+Overall, I'm excited to continue developing and refining this framework, and I'm committed to helping new learners and coders succeed in their programming endeavors. If you have any suggestions or feedback, I would love to hear from you!
 
 
 
