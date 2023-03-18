@@ -1,4 +1,8 @@
-# SimpleGUIDesigner with Themes
+# SimpleGUIDesigner with Live Preview
+
+Live preview is the main feature Im looking to integrate and provide. Its not fully flushed out, releases without live updates are available. 
+
+#
 
 This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
