@@ -288,7 +288,10 @@ class TreeNode:
 
         for arg_name in self.necessary_args_name:
             if arg_name == "layout":
-                continue
+                continue            
+            if "button_text" in arg_name:
+                value = "\"New Button\""
+
             value = str(self.necessary_args[arg_name] if not isinstance(
                 self.necessary_args[arg_name], str) else '"' +
                         self.necessary_args[arg_name] + '"')
@@ -305,6 +308,8 @@ class TreeNode:
         for arg_name, arg_value in self.optional_args.items():
             value = str(arg_value if not isinstance(arg_value, str) else '"' +
                         arg_value + '"')
+            if "button_text" in arg_name:
+                value = "\"New Button\""
             layout.append([
                 sg.Text(text=arg_name,
                         tooltip=(self.args_docs[arg_name]
