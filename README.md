@@ -1,6 +1,7 @@
 # SimpleGUIDesigner with Live Preview
 
 Live preview is the main feature Im looking to integrate and provide. Its not fully flushed out, releases without live updates are available. 
+![image](https://user-images.githubusercontent.com/98753696/226134972-b342a6f6-364f-4aaa-95fe-be8fa8a2955d.png)
 
 #
 
