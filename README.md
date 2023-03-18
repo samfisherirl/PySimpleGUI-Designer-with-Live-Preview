@@ -2,17 +2,17 @@
 
 Live preview is the main feature Im looking to integrate and provide. Its not fully flushed out, releases without live updates are available. 
 #
+This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
 Throughout my experience with software development, I have found Autohotkey to be a remarkably user-friendly and accessible tool, serving as a beacon of excellence for mid to low-level use cases. Conversely, as a newcomer to the language, I have found the Qt framework to be somewhat challenging to approach. While not insurmountable, the learning curve can prove daunting. It is for this reason that I have taken an interest in the PySimpleGUI model, as it enables a streamlined transition from visual design to code implementation.
 
 As a lifelong learner, I am always seeking out new and innovative approaches to mastering software development. With this in mind, I would be delighted to share my insights with others and contribute to the broader community. Although my current project is in its nascent stages, I am thrilled to witness its evolution and growth.
 
-If I may, I would like to take this opportunity to request any recommendations for libraries or tools that you utilize for GUI design. Personally, I have found pywebview and Eel to be highly effective, primarily due to the expansive HTML design tools universe that they offer. 
+
 
  ![image](https://user-images.githubusercontent.com/98753696/226136055-aa557d0b-31c2-4e8e-b9c5-82ee4e6c7cc5.png)
 
 
-This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
 With this, Im looking to provid themes, and small tweaks to improve consistance, ease of use, and QOL. 
 
