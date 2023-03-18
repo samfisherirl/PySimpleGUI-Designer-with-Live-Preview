@@ -4,10 +4,11 @@ import time
 from os import path, startfile
 import pyperclip
 import button_functions as util
-
-
+from pathlib import Path
+from subprocess import Popen, call
 import PySimpleGUI as sg
 from tree_node import TreeNode
+import threading
 
 GUI_CLASSES = dict(
     inspect.getmembers(sys.modules["PySimpleGUI"], inspect.isclass))
@@ -97,17 +98,29 @@ def make_elements_frame():
     return layout
 
 
-def export_maker(theme, tree):
-	
-	return f"""import PySimpleGUI as sg
+def export_maker(theme, tree, importer):
+    if importer:
+        importer = "import PySimpleGUI as sg"
+    else:
+        importer = "from time import sleep"
+    return f"""{importer}
 sg.theme('{theme}')
 layout = {tree}
-window = sg.Window('Template Window', layout, resizable=True)
+window = sg.Window('Preview Window', layout, resizable=True, enable_close_attempted_event=True, location=sg.user_settings_get_entry('-location-', (None, None)))
 while True:
-    event, values = window.read()   # Read the event that happened and the values dictionary
+    event, values = window.read()   
+    # Read the event that happened and the values dictionary
     print(event, values)
-    if event == sg.WIN_CLOSED or event == 'Exit':     # If user closed window with X or if user clicked "Exit" button then exit
-        break"""
+    if event in ('Exit', sg.WINDOW_CLOSE_ATTEMPTED_EVENT):
+        sg.user_settings_set_entry('-location-', window.current_location())  
+        # The line of code to save the position before exiting
+        break
+
+window.close()
+"""
+
+
+
 # Creates the main window layout from scratch. Necessary to reset the window.
 def make_main_window(tree):
 
@@ -207,7 +220,11 @@ def main():
         
         """ If user clicked button on an element in the tree# If user clicked button on an element in the tree"""
         if event == "-TREE-":
-            tree_node = values[event][0]
+            try:
+                tree_node = values[event][0]
+            except:
+                tree_node = current_tree_node
+                
             if tree_node != current_tree_node:
                 if current_tree_node is not None:
                     current_property.update(visible=False)
@@ -268,13 +285,24 @@ def main():
                 win2.close()
             element_name = event[6:]
             selected_tree_element = values["-TREE-"]
+            should_preview_update = False
+            #tree_element.update(values=tree.get_tree_data())
             if not selected_tree_element:
                 sg.popup("No element selected")
             else:
+                should_preview_update = True
                 selected_tree_element[0].add_tree_node(
                     TreeNode(GUI_CLASSES[element_name]))
                 tree_element.update(values=tree.get_tree_data())
-
+            if should_preview_update:
+                try: 
+                    previewer_refresh_status()
+                except Exception as e:
+                    sg.popup_error(
+                        "Error: " + str(e) +
+                        "\nError in preview (mistake in the layout). You can try finding it with export"
+                        )
+                previewer(tree)
             """here I try to instant update preview 
             try:
                 win2 = sg.Window('Preview',
@@ -359,7 +387,7 @@ def main():
         # If user clicked on the Export button
         # Shows the correspondent string layout for the GUI being built
         if event == "Export":
-            textout = export_maker(util.get_theme(), tree.layout_to_string())
+            textout = util.export_maker(util.get_theme(), tree.layout_to_string(), True)
             pyperclip.copy(textout)
             ev, vals = sg.Window('Click okay to copy', [[
                 sg.Multiline(default_text=textout, size=(20,10), key='-FILESLB-')], [
@@ -448,24 +476,21 @@ def main():
         # Handle window preview
         # Check if in the meantime if the window was closed
         # Have to see if I need timeout and win2_active variable with the window being modal
-        if win2_active:
-            ev, v = win2.read(timeout=100)
-            if ev == sg.WIN_CLOSED:
-                win2_active = False
-                win2.close()
 
-        if not win2_active and event == "Preview":
-            try:
-                win2 = sg.Window('Preview',
-                                tree.get_layout(),
-                                finalize=True,
-                                modal=False)
-                win2_active = True
+        if event == "Preview":
+            try: 
+                previewer_refresh_status()
             except Exception as e:
                 sg.popup_error(
                     "Error: " + str(e) +
                     "\nError in preview (mistake in the layout). You can try finding it with export"
-                )
+                    )
+            previewer(tree)
+            """win2 = sg.Window('Preview',
+                                tree.get_layout(),
+                                finalize=True,
+                                modal=False)
+            win2_active = True"""
 
         # autosave
         if time.time() - current_time > 180:
@@ -485,10 +510,36 @@ def main():
     except Exception as e:
         sg.popup_error("Error: " + str(e) + "\nError in autosaving to file")
 
+preview_closer = False
+
+def previewer(tree):
+    testfile_outtext = util.export_live(util.get_theme(), tree.layout_to_string())
+    testfile = Path.cwd() / "test.py"
+    evaler = Path.cwd() / "eval" / "live_preview.exe"
+    
+    with open(testfile, "w") as f:
+        f.write(testfile_outtext)
+    testfile = Path.cwd() / "eval" / "test.py"
+    with open(testfile, "w") as f:
+        f.write(testfile_outtext)
+
+    Popen([evaler])
+
+        
+
+def previewer_refresh_status():
+    global preview_closer
+    preview_closer = False
+    evaler = Path.cwd() / "eval" / "live_preview.exe"
+    try:
+        call(["PowerShell.exe", "Get-Process | Where-Object {$_.ProcessName -eq \"live_preview\"} | ForEach-Object {Stop-Process $_.Id -Force}"])
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
-    try:
-        main()
+    #try:
+    main() 
+    """
     except Exception as e:
         sg.popup_error(
             "Error: " + str(e) +
@@ -497,4 +548,4 @@ if __name__ == "__main__":
             "\nAn error happened that I didn't catch properly, so no good message to help in what's wrong"
             + " except the prob bluberish above :(" +
             "\nI hope no one sees this, but you know how it is, it will happen ¯\_(ツ)_/¯"
-        )
+        )"""
