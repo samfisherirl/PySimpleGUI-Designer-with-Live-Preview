@@ -4,6 +4,8 @@ Live preview is the main feature Im looking to integrate and provide. Its not fu
 #
 This is a fork from the original here: https://github.com/PriestTheBeast/SimpleGUIBuilder
 
+Main goal - Rewrite app top down
+
 As a software developer, I've always been passionate about creating tools and frameworks that make programming more accessible and user-friendly. Lately, I've been working on designing a GUI development framework for Python that is easy to use and can help new learners and coders.
 
 My framework is built on the PySimpleGUI model, which allows for a seamless transition from visual design to code implementation. I believe this approach can greatly benefit new learners, as it reduces the learning curve and provides a more intuitive way to develop GUI applications.
