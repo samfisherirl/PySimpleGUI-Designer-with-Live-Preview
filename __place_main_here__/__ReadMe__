@@ -1,0 +1,4 @@
+locate eval folder in alpha release, move folder here. live_preview.exe is used for running exec(string). 
+live_preview.py is that function. 
+
+I plan to rebuild the app from the ground up. thanks for your interest.
